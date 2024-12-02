@@ -1,0 +1,67 @@
+name: CI/CD Pipeline for Vite React App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+        
+      - name: Build project
+        run: npm run build
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Unit and Integration Tests
+        run: npm test -- --coverage --watchAll=false
+        env:
+          CI: true
+          
+      - name: Check Test Coverage # Copy pasted from other source, checking if that works...
+        run: |
+          if [ $(jq '.total.branches.pct >= 80' < coverage/coverage-summary.json) = false ]; then
+            echo "Coverage below 80%!" >&2
+            exit 1
+          fi
+
+      - name: Upload Test Coverage Report # Also copy pasted from other source, checking if that works...
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-coverage
+          path: coverage/
