@@ -1,7 +1,6 @@
 /* eslint react/prop-types: 0 */
 import { useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
-import styles from "./TodoItem.module.css";
 
 const InputTodo = (props) => {
   const [inputText, setInputText] = useState({
