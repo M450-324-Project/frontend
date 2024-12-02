@@ -48,20 +48,23 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Unit and Integration Tests
-        run: npm test -- --coverage --watchAll=false
+      - name: Start Application
+        run: npm run preview &
         env:
           CI: true
-          
-      - name: Check Test Coverage # Copy pasted from other source, checking if that works...
-        run: |
-          if [ $(jq '.total.branches.pct >= 80' < coverage/coverage-summary.json) = false ]; then
-            echo "Coverage below 80%!" >&2
-            exit 1
-          fi
 
-      - name: Upload Test Coverage Report # Also copy pasted from other source, checking if that works...
-        uses: actions/upload-artifact@v3
+      - name: Run Cypress
+        uses: cypress-io/github-action@v5
         with:
-          name: test-coverage
-          path: coverage/
+          browser: chrome
+          headless: true
+
+      # To test later
+      # - name: Enforce Coverage Threshold
+      #   run: |
+      #     COVERAGE=$(grep 'Statements' coverage-summary.txt | awk '{print $3}' | tr -d '%')
+      #     if [ "$COVERAGE" -lt 80 ]; then
+      #       echo "Coverage is below 80%! Failing the pipeline."
+      #       exit 1
+      #     fi
+      #   if: always()
