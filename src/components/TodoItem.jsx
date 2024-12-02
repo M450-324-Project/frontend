@@ -57,8 +57,7 @@ const TodoItem = (props) => {
         >
           <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
         </button>
-        <span style={completed ? completedStyle : null}>{title}</span>
-        <span className={styles.priorityLabel}> ({priority})</span>
+        <span style={completed ? completedStyle : null}>{title} (<i>{priority}</i>)</span>
       </div>
       <div style={editMode}>
         <input
