@@ -1,10 +1,12 @@
 /* eslint react/prop-types: 0 */
 import { useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
+import styles from "./TodoItem.module.css";
 
 const InputTodo = (props) => {
   const [inputText, setInputText] = useState({
     title: "",
+    priority: "low", // Default priority
   });
 
   const onChange = (e) => {
@@ -17,12 +19,13 @@ const InputTodo = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputText.title.trim()) {
-      props.addTodoProps(inputText.title);
+      props.addTodoProps(inputText.title, inputText.priority);
       setInputText({
         title: "",
+        priority: "low", // Reset priority to default
       });
     } else {
-      alert("Please write item");
+      alert("Please write an item");
     }
   };
 
@@ -40,6 +43,15 @@ const InputTodo = (props) => {
         name="title"
         onChange={onChange}
       />
+      <select
+        name="priority"
+        value={inputText.priority}
+        onChange={onChange}
+       >
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
       <button data-set="add-todo-btn" className="input-submit">
         <FaPlusCircle />
       </button>
