@@ -53,6 +53,12 @@ jobs:
         env:
           CI: true
 
+      - name: Wait for Vite Server
+        run: |
+          echo "Waiting for Vite server to be up..."
+          npx wait-on http://localhost:5173
+          echo "Vite server is up!"
+
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         with:
