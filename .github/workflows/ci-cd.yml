@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build and Lint
+  test:
+    name: Test (Lint, Build, Cypress)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -27,26 +27,6 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
-        
-      - name: Build project
-        run: npm run build
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
 
       - name: Build project
         run: npm run build
