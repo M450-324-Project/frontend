@@ -30,6 +30,14 @@ body {
   border-radius: calc(0.5 * 100px);
 }
 
+.category-text {
+  font-size: 1rem;
+  font-weight: 400;
+  width: 15%;
+  padding-right: 5px;
+  padding-left: 10px;
+}
+
 .input-text::placeholder {
   color: #000;
 }

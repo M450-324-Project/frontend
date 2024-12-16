@@ -5,6 +5,7 @@ import { FaPlusCircle } from "react-icons/fa";
 const InputTodo = (props) => {
   const [inputText, setInputText] = useState({
     title: "",
+    category: "",
     priority: "low", // Default priority
   });
 
@@ -18,9 +19,10 @@ const InputTodo = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputText.title.trim()) {
-      props.addTodoProps(inputText.title, inputText.priority);
+      props.addTodoProps(inputText.title, inputText.category, inputText.priority);
       setInputText({
         title: "",
+        category: "",
         priority: "low", // Reset priority to default
       });
     } else {
@@ -40,6 +42,14 @@ const InputTodo = (props) => {
         placeholder="Add todo..."
         value={inputText.title}
         name="title"
+        onChange={onChange}
+      />
+      <input
+        type="text"
+        className="category-text"
+        placeholder="Category"
+        value={inputText.category}
+        name="category"
         onChange={onChange}
       />
       <select
