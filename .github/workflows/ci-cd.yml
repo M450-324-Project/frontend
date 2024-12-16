@@ -43,12 +43,25 @@ jobs:
           headless: true
           config: baseUrl=http://localhost:4173
 
-      # To test later
-      # - name: Enforce Coverage Threshold
-      #   run: |
-      #     COVERAGE=$(grep 'Statements' coverage-summary.txt | awk '{print $3}' | tr -d '%')
-      #     if [ "$COVERAGE" -lt 80 ]; then
-      #       echo "Coverage is below 80%! Failing the pipeline."
-      #       exit 1
-      #     fi
-      #   if: always()
+      - name: Enforce Coverage Threshold
+        run: |
+          # Define the expected file path for the coverage summary
+          COVERAGE_FILE=coverage/coverage-summary.txt
+
+          # Check if the coverage file exists
+          if [ ! -f "$COVERAGE_FILE" ]; then
+            echo "Coverage file not found at $COVERAGE_FILE. Failing the pipeline."
+            exit 1
+          fi
+
+          # Extract the statement coverage percentage
+          COVERAGE=$(grep 'Statements' $COVERAGE_FILE | awk '{print $3}' | tr -d '%')
+
+          # Ensure coverage meets the threshold
+          if [ "$COVERAGE" -lt 80 ]; then
+            echo "Coverage is below 80%! Failing the pipeline."
+            exit 1
+          else
+            echo "Coverage is sufficient: $COVERAGE%"
+          fi
+        if: always()
