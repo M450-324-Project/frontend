@@ -52,7 +52,7 @@ jobs:
         run: npm run build
 
       - name: Start Application
-        run: npm run preview
+        run: npm run preview &
         env:
           CI: true
 
