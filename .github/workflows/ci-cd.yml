@@ -48,22 +48,24 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Start Application
-        run: npm run preview &
-        env:
-          CI: true
+      - name: Start Application and Capture Port
+        id: start-server
+        run: |
+          npm run preview | tee server-log.txt &
+          sleep 5  # Wait for a few seconds to ensure the server starts
+          PORT=$(grep -oP 'http://localhost:\K[0-9]+' server-log.txt)
+          echo "Server started on port: $PORT"
+          echo "PORT=$PORT" >> $GITHUB_ENV
 
       - name: Wait for Vite Server
-        run: |
-          echo "Waiting for Vite server to be up..."
-          npx wait-on http://localhost:5173
-          echo "Vite server is up!"
+        run: npx wait-on http://localhost:${{ env.PORT }}
 
       - name: Run Cypress
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
           headless: true
+          config: baseUrl=http://localhost:${{ env.PORT }}
 
       # To test later
       # - name: Enforce Coverage Threshold
