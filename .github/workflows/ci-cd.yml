@@ -48,8 +48,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Build project
+        run: npm run build
+
       - name: Start Application
-        run: npm run preview &
+        run: npm run preview
         env:
           CI: true
 
