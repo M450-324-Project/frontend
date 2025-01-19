@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styles from './CategoryManager.module.css';
 
 const CategoryManager = ({ categories, addCategory, updateCategory, deleteCategory }) => {
   const [newCategory, setNewCategory] = useState("");
@@ -12,7 +13,7 @@ const CategoryManager = ({ categories, addCategory, updateCategory, deleteCatego
   };
 
   return (
-    <div className="category-manager">
+    <div className={styles['category-manager']}>
       <h2>Manage Categories</h2>
       <form onSubmit={handleAddCategory}>
         <input

@@ -136,13 +136,13 @@ const TodoContainer = () => {
   return (
     <div className={styles.inner}>
       <Header />
+      <InputTodo addTodoProps={addTodoItem} categories={categories} />
       <CategoryManager
         categories={categories}
         addCategory={addCategory}
         updateCategory={updateCategory}
         deleteCategory={deleteCategory}
       />
-      <InputTodo addTodoProps={addTodoItem} categories={categories} />
       <TodosList
         todos={todos}
         handleChangeProps={handleChange}
