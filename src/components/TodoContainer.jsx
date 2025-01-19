@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Header from "./Header";
 import InputTodo from "./InputTodo";
 import TodosList from "./TodosList";
@@ -8,7 +8,6 @@ import styles from "./TodoContainer.module.css";
 const TodoContainer = () => {
   const [todos, setTodos] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [mode, setMode] = useState("default");
   const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
@@ -77,6 +76,8 @@ const TodoContainer = () => {
       priority,
       completed: false,
     };
+
+    console.log(newTodo)
 
     const response = await fetch("http://localhost:8080/api/task", {
       method: "POST",
@@ -160,7 +161,6 @@ const TodoContainer = () => {
   };
 
   const handleModeChange = (newMode, categoryId) => {
-    setMode(newMode);
     if (newMode === "priority") {
       fetchTodosByPriority();
       setSelectedCategory("");
