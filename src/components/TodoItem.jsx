@@ -85,9 +85,9 @@ const TodoItem = (props) => {
             setEditing(false);
           }}
         >
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
         </select>
       </div>
     </li>

@@ -6,7 +6,7 @@ const InputTodo = (props) => {
   const [inputText, setInputText] = useState({
     title: "",
     category: "",
-    priority: "low", // Default priority
+    priority: "LOW", // Default priority
   });
 
   const onChange = (e) => {
@@ -23,7 +23,7 @@ const InputTodo = (props) => {
       setInputText({
         title: "",
         category: "",
-        priority: "low", // Reset priority to default
+        priority: "LOW", // Reset priority to default
       });
     } else {
       alert("Please write an item");
@@ -57,9 +57,9 @@ const InputTodo = (props) => {
         value={inputText.priority}
         onChange={onChange}
        >
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
+        <option value="LOW">Low</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="HIGH">High</option>
       </select>
       <button data-set="add-todo-btn" className="input-submit">
         <FaPlusCircle />
