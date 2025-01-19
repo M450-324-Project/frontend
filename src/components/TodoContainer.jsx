@@ -146,6 +146,8 @@ const TodoContainer = () => {
   };
 
   const deleteCategory = async (id) => {
+    if(todos.some((todo) => todo.category.id === id)) return alert("Category is in use by a todo item. Please delete the todo item first.");
+    
     await fetch(`http://localhost:8080/api/category/${id}`, {
       method: "DELETE",
     });
