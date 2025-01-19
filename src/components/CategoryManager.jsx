@@ -1,8 +1,8 @@
+/* eslint react/prop-types: 0 */
 import { useState } from "react";
 import styles from './CategoryManager.module.css';
 
-const CategoryManager = (props) => {
-    const { categories, addCategory, updateCategory, deleteCategory } = props;
+const CategoryManager = ({ categories, addCategory, updateCategory, deleteCategory }) => {
     const [newCategory, setNewCategory] = useState("");
 
     const handleAddCategory = (e) => {
