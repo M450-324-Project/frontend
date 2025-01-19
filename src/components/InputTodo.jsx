@@ -18,7 +18,7 @@ const InputTodo = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (inputText.name.trim()) {
+    if (inputText.name.trim() && inputText.category !== "") {
       props.addTodoProps(inputText.name, inputText.category, inputText.priority);
       setInputText({
         name: "",
@@ -26,7 +26,7 @@ const InputTodo = (props) => {
         priority: "LOW", // Reset priority to default
       });
     } else {
-      alert("Please write an item");
+      alert("Please write an item and add a category to it");
     }
   };
 

@@ -71,7 +71,6 @@ const TodoContainer = () => {
   };
 
   const addTodoItem = async (name, categoryId, priority) => {
-    if(!categoryId) return alert('please select a category');
     const newTodo = {
       name,
       category: parseInt(categoryId),
