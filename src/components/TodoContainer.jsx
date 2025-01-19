@@ -1,78 +1,154 @@
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
 import Header from "./Header";
 import InputTodo from "./InputTodo";
 import TodosList from "./TodosList";
+import CategoryManager from "./CategoryManager";
 import styles from "./TodoContainer.module.css";
 
 const TodoContainer = () => {
-  const getInitialTodos = () => {
-    // getting stored items
-    const temp = localStorage.getItem("todos");
-    const savedTodos = JSON.parse(temp);
-    return savedTodos || [];
+  const [todos, setTodos] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    // Fetch todos and categories from backend
+    const fetchTodos = async () => {
+      const response = await fetch("http://localhost:8080/api/task");
+      const todos = await response.json();
+      setTodos(todos);
+    };
+
+    const fetchCategories = async () => {
+      const response = await fetch("http://localhost:8080/api/category");
+      const categories = await response.json();
+      setCategories(categories);
+    };
+
+    fetchTodos();
+    fetchCategories();
+  }, []);
+
+  const handleChange = async (id) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        todo.completed = !todo.completed;
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
+
+    // Update todo in backend
+    const todoToUpdate = updatedTodos.find((todo) => todo.id === id);
+    await fetch(`http://localhost:8080/api/task/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todoToUpdate),
+    });
   };
 
-  const [todos, setTodos] = useState(getInitialTodos());
-
-  const handleChange = (id) => {
-    setTodos((prevState) =>
-      prevState.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            completed: !todo.completed,
-          };
-        }
-        return todo;
-      })
-    );
-  };
-
-  const delTodo = (id) => {
+  const delTodo = async (id) => {
     setTodos([...todos.filter((todo) => todo.id !== id)]);
+
+    // Delete todo from backend
+    await fetch(`http://localhost:8080/api/task/${id}`, {
+      method: "DELETE",
+    });
   };
 
-  const addTodoItem = (title, category, priority) => {
+  const addTodoItem = async (name, categoryId, priority) => {
     const newTodo = {
-      id: uuidv4(),
-      title,
+      name,
+      category: parseInt(categoryId),
       priority,
-      category,
       completed: false,
     };
-    setTodos([...todos, newTodo]);
+
+    // Add todo to backend
+    const response = await fetch("http://localhost:8080/api/task", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newTodo),
+    });
+    var addedTodo = await response.json();
+    addedTodo.category = categories.find((category) => category.id === addedTodo.category.id);
+    setTodos([...todos, addedTodo]);
   };
 
-  const setUpdate = (updatedTitle, updatedCategory, updatedPriority, id) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id === id) {
-          todo.title = updatedTitle;
-          todo.category = updatedCategory;
-          todo.priority = updatedPriority;
-        }
-        return todo;
-      })
+  const setUpdate = async (updatedName, updatedCategoryId, updatedPriority, id) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        todo.name = updatedName;
+        todo.category = updatedCategoryId;
+        todo.priority = updatedPriority;
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
+
+    // Update todo in backend
+    const todoToUpdate = updatedTodos.find((todo) => todo.id === id);
+    await fetch(`http://localhost:8080/api/task/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todoToUpdate),
+    });
+  };
+
+  const addCategory = async (name) => {
+    const response = await fetch("http://localhost:8080/api/category", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+    const newCategory = await response.json();
+    setCategories([...categories, newCategory]);
+  };
+
+  const updateCategory = async (id, name) => {
+    await fetch(`http://localhost:8080/api/category/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name }),
+    });
+    setCategories(
+      categories.map((category) =>
+        category.id === id ? { ...category, name } : category
+      )
     );
   };
 
-  // componentDidUpdate
-  useEffect(() => {
-    // storing todos items
-    const temp = JSON.stringify(todos);
-    localStorage.setItem("todos", temp);
-  }, [todos]);
+  const deleteCategory = async (id) => {
+    await fetch(`http://localhost:8080/api/category/${id}`, {
+      method: "DELETE",
+    });
+    setCategories(categories.filter((category) => category.id !== id));
+  };
 
   return (
     <div className={styles.inner}>
       <Header />
-      <InputTodo addTodoProps={addTodoItem} />
+      <CategoryManager
+        categories={categories}
+        addCategory={addCategory}
+        updateCategory={updateCategory}
+        deleteCategory={deleteCategory}
+      />
+      <InputTodo addTodoProps={addTodoItem} categories={categories} />
       <TodosList
         todos={todos}
         handleChangeProps={handleChange}
         deleteTodoProps={delTodo}
         setUpdate={setUpdate}
+        categories={categories}
       />
     </div>
   );

@@ -23,7 +23,7 @@ const TodoItem = (props) => {
     textDecoration: "line-through",
   };
 
-  const { completed, id, title, category, priority } = props.todo;
+  const { completed, id, name, category, priority } = props.todo;
 
   const viewMode = {};
   const editMode = {};
@@ -57,31 +57,35 @@ const TodoItem = (props) => {
         >
           <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
         </button>
-        <span style={completed ? completedStyle : null}>{title} [{category}](<i>{priority}</i>)</span>
+        <span style={completed ? completedStyle : null}>{name} [{category?.name}] (<i>{priority}</i>)</span>
       </div>
       <div style={editMode}>
         <input
           type="text"
           className={styles.textInput}
-          value={title}
+          value={name}
           onChange={(e) => {
-            props.setUpdate(e.target.value, category, priority, id);
-          }}
-          onKeyDown={handleUpdatedDone}
-        />
-        <input
-          type="text"
-          className={styles.categoryInput}
-          value={category}
-          onChange={(e) => {
-            props.setUpdate(title, e.target.value, priority, id);
+            props.setUpdate(e.target.value, category?.id, priority, id);
           }}
           onKeyDown={handleUpdatedDone}
         />
         <select
+          value={category?.id || ""}
+          onChange={(e) => {
+            props.setUpdate(name, e.target.value, priority, id);
+          }}
+          className={styles.categorySelect}
+        >
+          {props.categories && props.categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+        <select
           value={priority}
           onChange={(e) => {
-            props.setUpdate(title, category, e.target.value, id);
+            props.setUpdate(name, category?.id, e.target.value, id);
             setEditing(false);
           }}
         >
