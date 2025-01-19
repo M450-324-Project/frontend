@@ -143,6 +143,11 @@ const TodoContainer = () => {
         category.id === id ? { ...category, name } : category
       )
     );
+    setTodos(
+      todos.map((todo) =>
+        todo.category.id === id ? { ...todo, category: { ...todo.category, name } } : todo
+      )
+    );
   };
 
   const deleteCategory = async (id) => {
