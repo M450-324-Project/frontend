@@ -86,7 +86,14 @@ const TodoContainer = () => {
       }
       return todo;
     });
-    setTodos(updatedTodos);
+    setTodos(todos.map((todo) => {
+      if (todo.id === id) {
+        todo.name = updatedName;
+        todo.category = categories.find((category) => category.id === parseInt(updatedCategoryId));
+        todo.priority = updatedPriority;
+      }
+      return todo;
+    }));
 
     // Update todo in backend
     const todoToUpdate = updatedTodos.find((todo) => todo.id === id);
