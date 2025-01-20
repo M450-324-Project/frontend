@@ -47,6 +47,13 @@ jobs:
         env:
           CI: true
 
+      # Bei error ein echo ausgeben
+      - name: Handle errors
+        if: failure()
+        run: |
+          echo "Build or tests failed. Please check the logs for details."
+
+
       # - name: Run Cypress
       #   uses: cypress-io/github-action@v5
       #   with:
