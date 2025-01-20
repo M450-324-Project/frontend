@@ -1,5 +1,6 @@
 name: CI/CD Pipeline for Vite React App
 
+# Sobald push auf main, main pullen und pipeline laufen lassen
 on:
   push:
     branches:
@@ -8,29 +9,39 @@ on:
     branches:
       - main
 
+# Jobs einrichten, ubuntu einsetzen, name setzen
 jobs:
   test:
     name: Test (Lint, Build, Cypress)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+
+    # Schritte definieren
     steps:
+
+      # Code auschecken
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Node.js mit node version 20 einrichten
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: 'npm'
 
+      # Abhängigkeiten installieren
       - name: Install dependencies
         run: npm install
 
+      # ESLint ausführen
       - name: Run ESLint
         run: npm run lint
 
+      # Projekt builden
       - name: Build project
         run: npm run build
 
+      # Webapp starten 
       - name: Start Application
         run: npm run preview &
         env:
