@@ -47,6 +47,13 @@ jobs:
         env:
           CI: true
 
+      # Deployment simulieren (simples echo wenn successful)
+      - name: Deploy to staging
+        if: success()
+        run: |
+          echo "Deploying to staging environment..."
+          # Add your deployment script/command here
+
       # Bei error ein echo ausgeben
       - name: Handle errors
         if: failure()
